@@ -1,0 +1,7 @@
+{
+"version": 3,
+"mappings": "AAAA,OAAQ;EACN,gBAAgB,EAAE,OAAO;EACzB,UAAU,EAAE,IAAI;EAChB,OAAO,EAAE,GAAG;;AAGd,kBAAmB;EACjB,SAAS,EAAE,IAAI;EACf,KAAK,EAAE,OAAO;EACd,WAAW,EAAE,GAAG",
+"sources": ["faostat-ui-metadata-editor.scss"],
+"names": [],
+"file": "faostat-ui-metadata-editor.css"
+}
