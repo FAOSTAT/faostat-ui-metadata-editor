@@ -76,7 +76,7 @@ define(['jquery',
     };
 
     APPLICATION.prototype.isLogged = function () {
-        return true;
+        return false;
     };
 
     return APPLICATION;
