@@ -2,7 +2,9 @@
 define(['jquery',
         'handlebars',
         'text!html/templates.hbs',
-        'FAOSTAT_UI_TREE'], function ($, Handlebars, templates, Tree) {
+        'FAOSTAT_UI_TREE',
+        'faostatapiclient',
+        'swal'], function ($, Handlebars, templates, Tree, FAOSTATAPIClient, swal) {
 
     'use strict';
 
@@ -10,7 +12,8 @@ define(['jquery',
 
         this.CONFIG = {
             lang: 'en',
-            placeholder_id: 'placeholder'
+            placeholder_id: 'placeholder',
+            logged: false
         };
 
     }
@@ -19,6 +22,9 @@ define(['jquery',
 
         /* Extend default configuration. */
         this.CONFIG = $.extend(true, {}, this.CONFIG, config);
+
+        /* Initiate FAOSTAT API client. */
+        this.CONFIG.api = new FAOSTATAPIClient();
 
         /* Variables. */
         var source = $(templates).filter('#main_structure').html(),
@@ -33,7 +39,7 @@ define(['jquery',
         $('#' + this.CONFIG.placeholder_id).html(html);
 
         /* Check whether the user is logged in, load the login otherwise. */
-        if (this.isLogged()) {
+        if (this.CONFIG.logged) {
             this.load_metadata_editor_structure();
         } else {
             this.load_login_structure();
@@ -57,7 +63,7 @@ define(['jquery',
             callback: {
                 // Render Section
                 onTreeRendered: function (arg) {
-                    console.debug('rendered bitch');
+                    console.debug('rendered bitch! ' + arg);
                 },
                 onClick: function (callback) {
                     console.debug(callback);
@@ -68,15 +74,39 @@ define(['jquery',
     };
 
     APPLICATION.prototype.load_login_structure = function () {
+
+        /* Load template. */
         var source = $(templates).filter('#login_structure').html(),
             template = Handlebars.compile(source),
             dynamic_data = {},
-            html = template(dynamic_data);
+            html = template(dynamic_data),
+            that = this;
         $('#content_placeholder').html(html);
+
+        /* Enhance button. */
+        $('#login_button').click(function () {
+            that.login();
+        });
+
     };
 
-    APPLICATION.prototype.isLogged = function () {
-        return false;
+    APPLICATION.prototype.login = function () {
+        var that = this;
+        try {
+            this.CONFIG.api.authentication({
+                username: $('#username').val().toString(),
+                password: $('#password').val().toString()
+            }).then(function (response) {
+                if (response.data.length > 0) {
+                    that.CONFIG.logged = true;
+                    that.load_metadata_editor_structure();
+                } else {
+                    swal('Error', 'Invalid username and/or password.', 'error');
+                }
+            });
+        } catch (e) {
+            console.debug(e);
+        }
     };
 
     return APPLICATION;

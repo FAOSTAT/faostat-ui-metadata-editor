@@ -35,6 +35,7 @@ require([
                     text: '{FENIX_CDN}/js/requirejs/plugins/text/2.0.12/text',
                     faostatapiclient: '../js/FAOSTATAPIClient',
                     application: submodules_path + '../src/js/application',
+                    swal: 'libs/sweet-alert',
                     html: '../html'
                 },
 
