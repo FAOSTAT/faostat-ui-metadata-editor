@@ -7,3 +7,6 @@
 [submodule "submodules/fenix-ui-common"]
 	path = submodules/fenix-ui-common
 	url = https://github.com/FENIX-Platform/fenix-ui-common.git
+[submodule "submodules/json-editor-faostat-theme"]
+	path = submodules/json-editor-faostat-theme
+	url = https://github.com/FAOSTAT/json-editor-faostat-theme.git

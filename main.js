@@ -3,20 +3,23 @@ require([
     './submodules/fenix-ui-common/js/Compiler',
     './submodules/fenix-ui-common/js/paths',
     './submodules/faostat-ui-tree/src/js/paths',
-    './submodules/faostat-ui-commons/js/paths'], function (Compiler, Common, Tree, FAOSTATCommons) {
+    './submodules/faostat-ui-commons/js/paths',
+    './submodules/json-editor-faostat-theme/src/js/paths'], function (Compiler, Common, Tree, FAOSTATCommons, FAOSTATTheme) {
 
     'use strict';
 
     var submodules_path = '../../submodules/',
         commonConfig = Common,
         treeConfig = Tree,
+        faostatThemeConfig = FAOSTATTheme,
         faostatCommonsConfig = FAOSTATCommons;
 
     commonConfig.baseUrl = submodules_path + 'fenix-ui-common/js';
     treeConfig.baseUrl = submodules_path + '/faostat-ui-tree/src/js';
     faostatCommonsConfig.baseUrl = submodules_path + '/faostat-ui-commons/js';
+    faostatThemeConfig.baseUrl = submodules_path + '/json-editor-faostat-theme/src/js';
 
-    Compiler.resolve([commonConfig, treeConfig, faostatCommonsConfig],
+    Compiler.resolve([commonConfig, treeConfig, faostatCommonsConfig, faostatThemeConfig],
 
         {
             placeholders: {
@@ -36,7 +39,9 @@ require([
                     faostatapiclient: '../js/FAOSTATAPIClient',
                     application: submodules_path + '../src/js/application',
                     swal: 'libs/sweet-alert',
-                    html: '../html'
+                    jsonEditor: '{FENIX_CDN}/js/json-editor/0.7.22/jsoneditor.min',
+                    html: '../html',
+                    json: '../json'
                 },
 
                 shim: {
