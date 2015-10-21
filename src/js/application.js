@@ -19,7 +19,8 @@ define(['jquery',
             lang: 'en',
             placeholder_id: 'placeholder',
             logged: true, /* TODO remove this! */
-            url_metadata: 'http://faostat3.fao.org/d3s2/v2/msd/resources/metadata/uid'
+            url_metadata: 'http://faostat3.fao.org/d3s2/v2/msd/resources/metadata/uid',
+            callback: {}
         };
 
     }
@@ -96,7 +97,8 @@ define(['jquery',
 
         /* Variables. */
         var editor,
-            container = $('#editor_placeholder');
+            container = $('#editor_placeholder'),
+            that = this;
 
         /* Clear message. */
         container.empty();
@@ -127,6 +129,140 @@ define(['jquery',
         /* Collapse editor. */
         container.find('.btn.btn-default.json-editor-btn-collapse').click();
 
+        /* Load data. */
+        $.ajax({
+
+            url: this.CONFIG.url_metadata + '/' + domain_id.toUpperCase() + '?full=true',
+            type: 'GET',
+            dataType: 'json',
+
+            success: function (response) {
+
+                /* Cast the result, if required. */
+                that.CONFIG.data = response;
+                if (typeof that.CONFIG.data === 'string') {
+                    that.CONFIG.data = $.parseJSON(response);
+                }
+
+                /* Populate editor. */
+                that.populate_editor(editor);
+
+            },
+
+            error: function (a) {
+                swal({
+                    title: 'Error',
+                    type: 'error',
+                    text: a.responseText
+                });
+            }
+
+        });
+
+    };
+
+    APPLICATION.prototype.populate_editor = function (editor) {
+
+        /* Variables. */
+        var section_regex,
+            properties,
+            key,
+            i,
+            container = $('#editor_placeholder');
+
+        /* Apply application settings. */
+        this.CONFIG.data = this.apply_settings(this.CONFIG.data);
+
+        /* Simplify OjCodeLists data. */
+        for (i = 0; i < Object.keys(this.CONFIG.data).length; i += 1) {
+            if (typeof this.CONFIG.data[Object.keys(this.CONFIG.data)[i]] === 'object') {
+                this.remove_OjCodeListsData(this.CONFIG.data[Object.keys(this.CONFIG.data)[i]], Object.keys(this.CONFIG.data)[i], this.CONFIG.data);
+            }
+        }
+
+        /* Display the editor... */
+        if (this.CONFIG.data !== undefined) {
+
+            /* Regular expression test to reorganize metadata sections. */
+            this.CONFIG.data.meIdentification = {};
+            section_regex = /[me]{2}[A-Z]/;
+            properties = this.CONFIG.data;
+            for (key in properties) {
+                if (!section_regex.test(key)) {
+                    if (key === 'title') {
+                        this.CONFIG.data.meIdentification.title_fenix = this.CONFIG.data[key];
+                    } else {
+                        this.CONFIG.data.meIdentification[key] = this.CONFIG.data[key];
+                    }
+                    delete this.CONFIG.data[key];
+                }
+            }
+
+            /* Populate the editor. */
+            if (this.CONFIG.data !== null) {
+                editor.setValue(this.CONFIG.data);
+            }
+
+            /* Collapse editor. */
+            container.find('.btn.btn-default.json-editor-btn-collapse').click();
+
+        }
+
+        /* ...or a courtesy message. */
+        //else {
+        //    this.display_courtesy_message();
+        //}
+
+        /* Rendered. */
+        this.CONFIG.rendered = true;
+
+        /* Collapse editor. */
+        container.find('.btn.btn-default.json-editor-btn-collapse').click();
+
+        /* Invoke user function. */
+        if (this.CONFIG.callback.onMetadataRendered) {
+            this.CONFIG.callback.onMetadataRendered();
+        }
+
+    };
+
+    /* TODO: Remove Map<String, String>. */
+    APPLICATION.prototype.remove_OjCodeListsData = function (schema_property, key, father) {
+        var i, p;
+        if (schema_property.EN !== undefined) {
+            father[key] = schema_property.EN;
+        }
+        if (schema_property.codes !== undefined && schema_property.codes[0] !== undefined) {
+            if (schema_property.codes[0].label) {
+                p = schema_property.codes[0].label.EN;
+            } else {
+                p = schema_property.codes[0].code;
+            }
+            father[key] = p;
+        } else {
+            for (i = 0; i < Object.keys(schema_property).length; i += 1) {
+                if (typeof schema_property[Object.keys(schema_property)[i]] === 'object') {
+                    this.remove_OjCodeListsData(schema_property[Object.keys(schema_property)[i]], Object.keys(schema_property)[i], schema_property);
+                }
+            }
+        }
+    };
+
+    APPLICATION.prototype.apply_settings = function(data) {
+
+        /* Apply application settings. */
+        var blacklist = ['dsd', 'rid'];
+
+        /* Filter by blacklist... */
+        blacklist.forEach(function (setting) {
+            try {
+                delete data[setting.toString()];
+            } catch (ignore) {
+
+            }
+        });
+
+        return data;
     };
 
     APPLICATION.prototype.load_login_structure = function () {
@@ -182,7 +318,7 @@ define(['jquery',
             } else if (typeof value === 'object') {
                 value = JSON.stringify(value);
             } else if (typeof value !== 'string') {
-                value = value.toString();
+                value = '' + value;
             }
 
             /* Convert milliseconds to valid date. */
@@ -269,13 +405,14 @@ define(['jquery',
         }
         /* Add better header for array children. */
         if (schema_property.items !== undefined) {
-            schema_property.items.headerTemplate ='{{i1}}';
+            schema_property.items.headerTemplate = '{{i1}}';
         }
         /* Remove maps. */
         if (schema_property.patternProperties !== undefined) {
             schema_property.type = 'string';
             delete schema_property.patternProperties;
         }
+        /* Recursivity. */
         if (schema_property.properties !== undefined) {
             for (i = 0; i < Object.keys(schema_property.properties).length; i += 1) {
                 p = schema_property.properties[Object.keys(schema_property.properties)[i]];
