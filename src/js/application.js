@@ -19,8 +19,13 @@ define(['jquery',
             lang: 'en',
             placeholder_id: 'placeholder',
             logged: true, /* TODO remove this! */
-            url_metadata: 'http://faostat3.fao.org/d3s2/v2/msd/resources/metadata/uid',
-            callback: {}
+            //url_metadata: 'http://faostat3.fao.org/d3s2/v2/msd/resources/metadata/uid',
+            url_metadata: 'http://faostat3.fao.org/mdfaostat/get',
+            callback: {},
+            original_full_data: null,
+            original_lite_data: null,
+            edited_full_data: null,
+            edited_lite_data: null
         };
 
     }
@@ -91,13 +96,17 @@ define(['jquery',
             }
         });
 
+        /* Save Changes button. */
+        $('#save_button').click(function () {
+            console.debug(that.CONFIG.editor.getValue());
+        });
+
     };
 
     APPLICATION.prototype.load_mdsd = function (domain_id) {
 
         /* Variables. */
-        var editor,
-            container = $('#editor_placeholder'),
+        var container = $('#editor_placeholder'),
             that = this;
 
         /* Clear message. */
@@ -107,7 +116,7 @@ define(['jquery',
         this.remove_OjCodeLists(this.CONFIG.schema);
 
         /* Initiate JSON editor. */
-        editor = new JSONEditor(document.getElementById('editor_placeholder'), {
+        this.CONFIG.editor = new JSONEditor(document.getElementById('editor_placeholder'), {
             schema: this.CONFIG.schema,
             theme: 'bootstrap3',
             iconlib: 'fontawesome4',
@@ -132,9 +141,15 @@ define(['jquery',
         /* Load data. */
         $.ajax({
 
-            url: this.CONFIG.url_metadata + '/' + domain_id.toUpperCase() + '?full=true',
+            //url: this.CONFIG.url_metadata,
+            url: 'http://faostat3.fao.org/mdfaostat/get/?Lang=en&domainCode=TP&type=lite',
             type: 'GET',
             dataType: 'json',
+            //data: {
+            //    lang: this.CONFIG.lang,
+            //    domainCode: domain_id.toUpperCase(),
+            //    type: 'lite'
+            //},
 
             success: function (response) {
 
@@ -143,9 +158,10 @@ define(['jquery',
                 if (typeof that.CONFIG.data === 'string') {
                     that.CONFIG.data = $.parseJSON(response);
                 }
+                console.debug(that.CONFIG.data);
 
                 /* Populate editor. */
-                that.populate_editor(editor);
+                that.populate_editor();
 
             },
 
@@ -161,7 +177,7 @@ define(['jquery',
 
     };
 
-    APPLICATION.prototype.populate_editor = function (editor) {
+    APPLICATION.prototype.populate_editor = function () {
 
         /* Variables. */
         var section_regex,
@@ -200,8 +216,28 @@ define(['jquery',
 
             /* Populate the editor. */
             if (this.CONFIG.data !== null) {
-                editor.setValue(this.CONFIG.data);
+                this.CONFIG.editor.setValue(this.CONFIG.data);
             }
+
+            /* Test Lite Metadata. */
+            //lite = $.parseJSON(lite);
+            ///* Regular expression test to reorganize metadata sections. */
+            //lite.meIdentification = {};
+            //section_regex = /[me]{2}[A-Z]/;
+            //properties = lite;
+            //for (key in properties) {
+            //    if (!section_regex.test(key)) {
+            //        if (key === 'title') {
+            //            lite.meIdentification.title_fenix = lite[key];
+            //        } else {
+            //            lite.meIdentification[key] = lite[key];
+            //        }
+            //        delete lite[key];
+            //    }
+            //}
+            ///* Apply application settings. */
+            //lite = this.apply_settings(lite);
+            //this.CONFIG.editor.setValue(lite);
 
             /* Collapse editor. */
             container.find('.btn.btn-default.json-editor-btn-collapse').click();
