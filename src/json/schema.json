@@ -270,7 +270,7 @@
           "type": "string"
         },
         "organization": {
-          "type": "object",
+          "type": "string",
           "title": "Organization",
           "title_i18n": {
             "en": "Organization",
@@ -282,15 +282,10 @@
             "en": "Name of the responsible organization.",
             "fr": "",
             "es": ""
-          },
-          "patternProperties": {
-            ".{1,}": {
-              "type": "string"
-            }
           }
         },
         "organizationUnit": {
-          "type": "object",
+          "type": "string",
           "title": "Organization unit/division",
           "title_i18n": {
             "en": "Organization unit/division",
@@ -302,15 +297,10 @@
             "en": "Addressable subdivision of an organization.",
             "fr": "",
             "es": ""
-          },
-          "patternProperties": {
-            ".{1,}": {
-              "type": "string"
-            }
           }
         },
         "position": {
-          "type": "object",
+          "type": "string",
           "title": "Position",
           "title_i18n": {
             "en": "Position",
@@ -322,11 +312,6 @@
             "en": "Role or position of the responsible person.",
             "fr": "",
             "es": ""
-          },
-          "patternProperties": {
-            ".{1,}": {
-              "type": "string"
-            }
           }
         },
         "role": {
@@ -335,7 +320,7 @@
           "$ref": "#/definitions/ResponsiblePartyRole"
         },
         "specify": {
-          "type": "object",
+          "type": "string",
           "title": "Specify",
           "title_i18n": {
             "en": "Specify",
@@ -347,16 +332,11 @@
             "en": "Textual metadata element that allows to specify the role performed by the responsible party. This field is conditional to the element \u003crole\u003e.",
             "fr": "",
             "es": ""
-          },
-          "patternProperties": {
-            ".{1,}": {
-              "type": "string"
-            }
           }
         },
         "contactInfo": {
           "title": "Contact Info",
-          "$ref": "#/definitions/OjContact"
+          "type": "string"
         }
       }
     },
