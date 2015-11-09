@@ -153,24 +153,19 @@ define(['jquery',
 
             success: function (response) {
 
-                console.debug(response);
-
                 /* Cast the result, if required. */
-                that.CONFIG.data = response;
-                if (typeof that.CONFIG.data === 'string') {
-                    that.CONFIG.data = $.parseJSON(response);
+                that.CONFIG.original_lite_data = response;
+                if (typeof that.CONFIG.original_lite_data === 'string') {
+                    that.CONFIG.original_lite_data = $.parseJSON(response);
                 }
-                console.debug(that.CONFIG.data);
+                console.debug(that.CONFIG.original_lite_data);
 
                 /* Populate editor. */
                 that.populate_editor();
 
             },
 
-            error: function (a, b, c) {
-                console.debug(a);
-                console.debug(b);
-                console.debug(c);
+            error: function (a) {
                 swal({
                     title: 'Error',
                     type: 'error',
@@ -192,36 +187,36 @@ define(['jquery',
             container = $('#editor_placeholder');
 
         /* Apply application settings. */
-        this.CONFIG.data = this.apply_settings(this.CONFIG.data);
+        //this.CONFIG.data = this.apply_settings(this.CONFIG.data);
 
         /* Simplify OjCodeLists data. */
-        for (i = 0; i < Object.keys(this.CONFIG.data).length; i += 1) {
-            if (typeof this.CONFIG.data[Object.keys(this.CONFIG.data)[i]] === 'object') {
-                this.remove_OjCodeListsData(this.CONFIG.data[Object.keys(this.CONFIG.data)[i]], Object.keys(this.CONFIG.data)[i], this.CONFIG.data);
-            }
-        }
+        //for (i = 0; i < Object.keys(this.CONFIG.data).length; i += 1) {
+        //    if (typeof this.CONFIG.data[Object.keys(this.CONFIG.data)[i]] === 'object') {
+        //        this.remove_OjCodeListsData(this.CONFIG.data[Object.keys(this.CONFIG.data)[i]], Object.keys(this.CONFIG.data)[i], this.CONFIG.data);
+        //    }
+        //}
 
         /* Display the editor... */
-        if (this.CONFIG.data !== undefined) {
+        if (this.CONFIG.original_lite_data !== undefined) {
 
             /* Regular expression test to reorganize metadata sections. */
-            this.CONFIG.data.meIdentification = {};
+            this.CONFIG.original_lite_data.meIdentification = {};
             section_regex = /[me]{2}[A-Z]/;
-            properties = this.CONFIG.data;
+            properties = this.CONFIG.original_lite_data;
             for (key in properties) {
                 if (!section_regex.test(key)) {
                     if (key === 'title') {
-                        this.CONFIG.data.meIdentification.title_fenix = this.CONFIG.data[key];
+                        this.CONFIG.original_lite_data.meIdentification.title_fenix = this.CONFIG.original_lite_data[key];
                     } else {
-                        this.CONFIG.data.meIdentification[key] = this.CONFIG.data[key];
+                        this.CONFIG.original_lite_data.meIdentification[key] = this.CONFIG.original_lite_data[key];
                     }
-                    delete this.CONFIG.data[key];
+                    delete this.CONFIG.original_lite_data[key];
                 }
             }
 
             /* Populate the editor. */
-            if (this.CONFIG.data !== null) {
-                this.CONFIG.editor.setValue(this.CONFIG.data);
+            if (this.CONFIG.original_lite_data !== null) {
+                this.CONFIG.editor.setValue(this.CONFIG.original_lite_data);
             }
 
             /* Test Lite Metadata. */
