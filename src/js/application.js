@@ -20,7 +20,7 @@ define(['jquery',
             placeholder_id: 'placeholder',
             logged: true, /* TODO remove this! */
             //url_metadata: 'http://faostat3.fao.org/d3s2/v2/msd/resources/metadata/uid',
-            url_metadata: 'http://faostat3.fao.org/mdfaostat/get',
+            url_metadata: 'http://faostat3.fao.org/mdfaostat/get/',
             callback: {},
             original_full_data: null,
             original_lite_data: null,
@@ -141,17 +141,19 @@ define(['jquery',
         /* Load data. */
         $.ajax({
 
-            //url: this.CONFIG.url_metadata,
-            url: 'http://faostat3.fao.org/mdfaostat/get/?Lang=en&domainCode=TP&type=lite',
+            url: this.CONFIG.url_metadata,
             type: 'GET',
             dataType: 'json',
-            //data: {
-            //    lang: this.CONFIG.lang,
-            //    domainCode: domain_id.toUpperCase(),
-            //    type: 'lite'
-            //},
+            contentType: 'application/json; charset=utf-8',
+            data: {
+                lang: this.CONFIG.lang,
+                domainCode: domain_id.toUpperCase(),
+                type: 'lite'
+            },
 
             success: function (response) {
+
+                console.debug(response);
 
                 /* Cast the result, if required. */
                 that.CONFIG.data = response;
@@ -165,7 +167,10 @@ define(['jquery',
 
             },
 
-            error: function (a) {
+            error: function (a, b, c) {
+                console.debug(a);
+                console.debug(b);
+                console.debug(c);
                 swal({
                     title: 'Error',
                     type: 'error',
