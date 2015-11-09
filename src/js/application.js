@@ -25,7 +25,8 @@ define(['jquery',
             original_full_data: null,
             original_lite_data: null,
             edited_full_data: null,
-            edited_lite_data: null
+            edited_lite_data: null,
+            domain_id: null
         };
 
     }
@@ -91,6 +92,7 @@ define(['jquery',
                     console.debug('rendered bitch! ' + arg);
                 },
                 onClick: function (callback) {
+                    that.CONFIG.domain_id = callback.id;
                     that.load_mdsd(callback.id);
                 }
             }
@@ -98,8 +100,67 @@ define(['jquery',
 
         /* Save Changes button. */
         $('#save_button').click(function () {
-            console.debug(that.CONFIG.editor.getValue());
+            that.save();
         });
+
+    };
+
+    APPLICATION.prototype.save = function () {
+
+        /* Variables. */
+        var editor_value = this.CONFIG.editor.getValue(),
+            that = this,
+            i,
+            key,
+            value;
+        console.debug(editor_value);
+
+        /* Remove items from meIdentification. */
+        for (i = 0; i < Object.keys(editor_value.meIdentification).length; i += 1) {
+            key = Object.keys(editor_value.meIdentification)[i];
+            value = editor_value.meIdentification[key];
+            //console.debug('key: ' + key);
+            //console.debug(value);
+            //console.debug('-|-');
+            editor_value[key] = value;
+        }
+        delete editor_value.meIdentification;
+        console.debug(editor_value);
+
+        /* Get original full data. */
+        $.ajax({
+
+            url: this.CONFIG.url_metadata,
+            type: 'GET',
+            dataType: 'json',
+            contentType: 'application/json; charset=utf-8',
+            data: {
+                lang: this.CONFIG.lang,
+                domainCode: this.CONFIG.domain_id.toUpperCase(),
+                type: 'full'
+            },
+
+            success: function (response) {
+
+                /* Cast the result, if required. */
+                that.CONFIG.original_full_data = response;
+                if (typeof that.CONFIG.original_full_data === 'string') {
+                    that.CONFIG.original_full_data = $.parseJSON(response);
+                }
+                console.debug(that.CONFIG.original_full_data);
+
+            },
+
+            error: function (a) {
+                swal({
+                    title: 'Error',
+                    type: 'error',
+                    text: a.responseText
+                });
+            }
+
+        });
+
 
     };
 
@@ -219,35 +280,15 @@ define(['jquery',
                 this.CONFIG.editor.setValue(this.CONFIG.original_lite_data);
             }
 
-            /* Test Lite Metadata. */
-            //lite = $.parseJSON(lite);
-            ///* Regular expression test to reorganize metadata sections. */
-            //lite.meIdentification = {};
-            //section_regex = /[me]{2}[A-Z]/;
-            //properties = lite;
-            //for (key in properties) {
-            //    if (!section_regex.test(key)) {
-            //        if (key === 'title') {
-            //            lite.meIdentification.title_fenix = lite[key];
-            //        } else {
-            //            lite.meIdentification[key] = lite[key];
-            //        }
-            //        delete lite[key];
-            //    }
-            //}
-            ///* Apply application settings. */
-            //lite = this.apply_settings(lite);
-            //this.CONFIG.editor.setValue(lite);
-
             /* Collapse editor. */
             container.find('.btn.btn-default.json-editor-btn-collapse').click();
 
         }
 
         /* ...or a courtesy message. */
-        //else {
-        //    this.display_courtesy_message();
-        //}
+        else {
+            this.display_courtesy_message();
+        }
 
         /* Rendered. */
         this.CONFIG.rendered = true;
