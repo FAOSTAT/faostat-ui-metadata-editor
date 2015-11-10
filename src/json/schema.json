@@ -1137,13 +1137,8 @@
                     "fr": "",
                     "es": ""
                   },
-                  "type": "object",
-                  "propertyOrder": 1,
-                  "patternProperties": {
-                    ".{1,}": {
-                      "type": "string"
-                    }
-                  }
+                  "type": "string",
+                  "propertyOrder": 1
                 },
                 "releaseCalendarAccess": {
                   "title": "Access to the release calendar",
@@ -1228,13 +1223,8 @@
                 "fr": "",
                 "es": ""
               },
-              "type": "object",
-              "propertyOrder": 1,
-              "patternProperties": {
-                ".{1,}": {
-                  "type": "string"
-                }
-              }
+              "type": "string",
+              "propertyOrder": 1
             },
             "metadataCompletenessRate": {
               "title": "Metadata completeness rate",
@@ -1283,13 +1273,8 @@
                 "fr": "",
                 "es": ""
               },
-              "type": "object",
-              "propertyOrder": 1,
-              "patternProperties": {
-                ".{1,}": {
-                  "type": "string"
-                }
-              }
+              "type": "string",
+              "propertyOrder": 1
             },
             "confidentialityDataTreatment": {
               "title": "Confidentiality - Data treatment",
@@ -1304,13 +1289,8 @@
                 "fr": "",
                 "es": ""
               },
-              "type": "object",
-              "propertyOrder": 2,
-              "patternProperties": {
-                ".{1,}": {
-                  "type": "string"
-                }
-              }
+              "type": "string",
+              "propertyOrder": 2
             },
             "confidentialityStatus": {
               "title": "Status of confidentiality",
@@ -1398,13 +1378,8 @@
             "fr": "",
             "es": ""
           },
-          "type": "object",
-          "propertyOrder": 3,
-          "patternProperties": {
-            ".{1,}": {
-              "type": "string"
-            }
-          }
+          "type": "string",
+          "propertyOrder": 3
         },
         "statisticalConceptsDefinitions": {
           "title": "Statistical concepts / definitions",
@@ -1419,13 +1394,8 @@
             "fr": "",
             "es": ""
           },
-          "type": "object",
-          "propertyOrder": 4,
-          "patternProperties": {
-            ".{1,}": {
-              "type": "string"
-            }
-          }
+          "type": "string",
+          "propertyOrder": 4
         },
         "seReferencePopulation": {
           "title": "Reference population",
@@ -1456,13 +1426,8 @@
                 "fr": "",
                 "es": ""
               },
-              "type": "object",
-              "propertyOrder": 1,
-              "patternProperties": {
-                ".{1,}": {
-                  "type": "string"
-                }
-              }
+              "type": "string",
+              "propertyOrder": 1
             },
             "statisticalUnit": {
               "title": "Statistical unit",
@@ -1477,13 +1442,8 @@
                 "fr": "",
                 "es": ""
               },
-              "type": "object",
-              "propertyOrder": 2,
-              "patternProperties": {
-                ".{1,}": {
-                  "type": "string"
-                }
-              }
+              "type": "string",
+              "propertyOrder": 2
             },
             "referencePeriod": {
               "title": "Period of reference",
@@ -1567,13 +1527,8 @@
                 "fr": "",
                 "es": ""
               },
-              "type": "object",
-              "propertyOrder": 2,
-              "patternProperties": {
-                ".{1,}": {
-                  "type": "string"
-                }
-              }
+              "type": "string",
+              "propertyOrder": 2
             },
             "coverageTime": {
               "title": "Coverage period",
@@ -1693,13 +1648,8 @@
             "fr": "",
             "es": ""
           },
-          "type": "object",
-          "propertyOrder": 1,
-          "patternProperties": {
-            ".{1,}": {
-              "type": "string"
-            }
-          }
+          "type": "string",
+          "propertyOrder": 1
         },
         "qualityAssessment": {
           "title": "Data quality assessment",
@@ -1714,13 +1664,8 @@
             "fr": "",
             "es": ""
           },
-          "type": "object",
-          "propertyOrder": 3,
-          "patternProperties": {
-            ".{1,}": {
-              "type": "string"
-            }
-          }
+          "type": "string",
+          "propertyOrder": 3
         },
         "qualityAssurance": {
           "title": "Quality assurance",
@@ -1735,13 +1680,8 @@
             "fr": "",
             "es": ""
           },
-          "type": "object",
-          "propertyOrder": 2,
-          "patternProperties": {
-            ".{1,}": {
-              "type": "string"
-            }
-          }
+          "type": "string",
+          "propertyOrder": 2
         },
         "seAccuracy": {
           "title": "Accuracy",
@@ -1772,13 +1712,8 @@
                 "fr": "",
                 "es": ""
               },
-              "type": "object",
-              "propertyOrder": 1,
-              "patternProperties": {
-                ".{1,}": {
-                  "type": "string"
-                }
-              }
+              "type": "string",
+              "propertyOrder": 1
             },
             "accuracySampling": {
               "title": "Accuracy - sampling error",
@@ -1793,13 +1728,8 @@
                 "fr": "",
                 "es": ""
               },
-              "type": "object",
-              "propertyOrder": 2,
-              "patternProperties": {
-                ".{1,}": {
-                  "type": "string"
-                }
-              }
+              "type": "string",
+              "propertyOrder": 2
             }
           }
         },
@@ -1832,13 +1762,8 @@
                 "fr": "",
                 "es": ""
               },
-              "type": "object",
-              "propertyOrder": 1,
-              "patternProperties": {
-                ".{1,}": {
-                  "type": "string"
-                }
-              }
+              "type": "string",
+              "propertyOrder": 1
             },
             "revisionPractice": {
               "title": "Revision practice",
@@ -1853,13 +1778,8 @@
                 "fr": "",
                 "es": ""
               },
-              "type": "object",
-              "propertyOrder": 2,
-              "patternProperties": {
-                ".{1,}": {
-                  "type": "string"
-                }
-              }
+              "type": "string",
+              "propertyOrder": 2
             }
           }
         },
@@ -1892,13 +1812,8 @@
                 "fr": "",
                 "es": ""
               },
-              "type": "object",
-              "propertyOrder": 1,
-              "patternProperties": {
-                ".{1,}": {
-                  "type": "string"
-                }
-              }
+              "type": "string",
+              "propertyOrder": 1
             },
             "userSatisfaction": {
               "title": "User satisfaction",
@@ -1913,13 +1828,8 @@
                 "fr": "",
                 "es": ""
               },
-              "type": "object",
-              "propertyOrder": 2,
-              "patternProperties": {
-                ".{1,}": {
-                  "type": "string"
-                }
-              }
+              "type": "string",
+              "propertyOrder": 2
             },
             "completeness": {
               "title": "Completeness",
@@ -1934,13 +1844,8 @@
                 "fr": "",
                 "es": ""
               },
-              "type": "object",
-              "propertyOrder": 3,
-              "patternProperties": {
-                ".{1,}": {
-                  "type": "string"
-                }
-              }
+              "type": "string",
+              "propertyOrder": 3
             },
             "completenessPercentage": {
               "title": "Percentage of completeness",
@@ -1989,13 +1894,8 @@
                 "fr": "",
                 "es": ""
               },
-              "type": "object",
-              "propertyOrder": 1,
-              "patternProperties": {
-                ".{1,}": {
-                  "type": "string"
-                }
-              }
+              "type": "string",
+              "propertyOrder": 1
             },
             "comparabilityTime": {
               "title": "Time comparability",
@@ -2010,13 +1910,8 @@
                 "fr": "",
                 "es": ""
               },
-              "type": "object",
-              "propertyOrder": 2,
-              "patternProperties": {
-                ".{1,}": {
-                  "type": "string"
-                }
-              }
+              "type": "string",
+              "propertyOrder": 2
             },
             "coherenceIntern": {
               "title": "Internal coherence",
@@ -2031,13 +1926,8 @@
                 "fr": "",
                 "es": ""
               },
-              "type": "object",
-              "propertyOrder": 3,
-              "patternProperties": {
-                ".{1,}": {
-                  "type": "string"
-                }
-              }
+              "type": "string",
+              "propertyOrder": 3
             }
           }
         },
@@ -2070,13 +1960,8 @@
                 "fr": "",
                 "es": ""
               },
-              "type": "object",
-              "propertyOrder": 1,
-              "patternProperties": {
-                ".{1,}": {
-                  "type": "string"
-                }
-              }
+              "type": "string",
+              "propertyOrder": 1
             },
             "punctuality": {
               "title": "Punctuality",
@@ -2091,13 +1976,8 @@
                 "fr": "",
                 "es": ""
               },
-              "type": "object",
-              "propertyOrder": 2,
-              "patternProperties": {
-                ".{1,}": {
-                  "type": "string"
-                }
-              }
+              "type": "string",
+              "propertyOrder": 2
             }
           }
         }
@@ -2132,13 +2012,8 @@
             "fr": "",
             "es": ""
           },
-          "type": "object",
-          "propertyOrder": 1,
-          "patternProperties": {
-            ".{1,}": {
-              "type": "string"
-            }
-          }
+          "type": "string",
+          "propertyOrder": 1
         },
         "seUpdate": {
           "title": "Update",
@@ -2308,13 +2183,8 @@
             "fr": "",
             "es": ""
           },
-          "type": "object",
-          "propertyOrder": 2,
-          "patternProperties": {
-            ".{1,}": {
-              "type": "string"
-            }
-          }
+          "type": "string",
+          "propertyOrder": 2
         },
         "referenceSystemAuthority": {
           "title": "Reference system authority",
@@ -2379,13 +2249,8 @@
                 "fr": "",
                 "es": ""
               },
-              "type": "object",
-              "propertyOrder": 2,
-              "patternProperties": {
-                ".{1,}": {
-                  "type": "string"
-                }
-              }
+              "type": "string",
+              "propertyOrder": 2
             },
             "seProjectionParameters": {
               "title": "PROJECTION PARAMETERS",
@@ -2778,13 +2643,8 @@
                 "fr": "",
                 "es": ""
               },
-              "type": "object",
-              "propertyOrder": 2,
-              "patternProperties": {
-                ".{1,}": {
-                  "type": "string"
-                }
-              }
+              "type": "string",
+              "propertyOrder": 2
             },
             "seEllipsoidParameters": {
               "title": "Ellipsoid Parameters",
@@ -2901,13 +2761,8 @@
                 "fr": "",
                 "es": ""
               },
-              "type": "object",
-              "propertyOrder": 2,
-              "patternProperties": {
-                ".{1,}": {
-                  "type": "string"
-                }
-              }
+              "type": "string",
+              "propertyOrder": 2
             }
           }
         }
@@ -3380,13 +3235,8 @@
                     "fr": "",
                     "es": ""
                   },
-                  "type": "object",
-                  "propertyOrder": 3,
-                  "patternProperties": {
-                    ".{1,}": {
-                      "type": "string"
-                    }
-                  }
+                  "type": "string",
+                  "propertyOrder": 3
                 },
                 "dataCollection": {
                   "title": "Data collection",
@@ -3401,13 +3251,8 @@
                     "fr": "",
                     "es": ""
                   },
-                  "type": "object",
-                  "propertyOrder": 4,
-                  "patternProperties": {
-                    ".{1,}": {
-                      "type": "string"
-                    }
-                  }
+                  "type": "string",
+                  "propertyOrder": 4
                 },
                 "collectionPeriodicity": {
                   "title": "Periodicity of data collection",
@@ -3474,13 +3319,8 @@
                     "fr": "",
                     "es": ""
                   },
-                  "type": "object",
-                  "propertyOrder": 2,
-                  "patternProperties": {
-                    ".{1,}": {
-                      "type": "string"
-                    }
-                  }
+                  "type": "string",
+                  "propertyOrder": 2
                 },
                 "rawDataDescription": {
                   "title": "Description of raw data",
@@ -3495,13 +3335,8 @@
                     "fr": "",
                     "es": ""
                   },
-                  "type": "object",
-                  "propertyOrder": 3,
-                  "patternProperties": {
-                    ".{1,}": {
-                      "type": "string"
-                    }
-                  }
+                  "type": "string",
+                  "propertyOrder": 3
                 },
                 "dataCollection": {
                   "title": "Data collection",
@@ -3516,13 +3351,8 @@
                     "fr": "",
                     "es": ""
                   },
-                  "type": "object",
-                  "propertyOrder": 4,
-                  "patternProperties": {
-                    ".{1,}": {
-                      "type": "string"
-                    }
-                  }
+                  "type": "string",
+                  "propertyOrder": 4
                 }
               }
             }
@@ -3557,13 +3387,8 @@
                 "fr": "",
                 "es": ""
               },
-              "type": "object",
-              "propertyOrder": 1,
-              "patternProperties": {
-                ".{1,}": {
-                  "type": "string"
-                }
-              }
+              "type": "string",
+              "propertyOrder": 1
             },
             "weights": {
               "title": "Weights",
@@ -3578,13 +3403,8 @@
                 "fr": "",
                 "es": ""
               },
-              "type": "object",
-              "propertyOrder": 2,
-              "patternProperties": {
-                ".{1,}": {
-                  "type": "string"
-                }
-              }
+              "type": "string",
+              "propertyOrder": 2
             },
             "aggregationProcessing": {
               "title": "Process of aggregation",
@@ -3599,13 +3419,8 @@
                 "fr": "",
                 "es": ""
               },
-              "type": "object",
-              "propertyOrder": 3,
-              "patternProperties": {
-                ".{1,}": {
-                  "type": "string"
-                }
-              }
+              "type": "string",
+              "propertyOrder": 3
             },
             "aggregationFormula": {
               "title": "Aggregation formula",
@@ -3653,13 +3468,8 @@
                 "fr": "",
                 "es": ""
               },
-              "type": "object",
-              "propertyOrder": 6,
-              "patternProperties": {
-                ".{1,}": {
-                  "type": "string"
-                }
-              }
+              "type": "string",
+              "propertyOrder": 6
             },
             "indexType": {
               "title": "Type of index",
@@ -3674,13 +3484,8 @@
                 "fr": "",
                 "es": ""
               },
-              "type": "object",
-              "propertyOrder": 7,
-              "patternProperties": {
-                ".{1,}": {
-                  "type": "string"
-                }
-              }
+              "type": "string",
+              "propertyOrder": 7
             },
             "basePeriod": {
               "title": "Base period",
@@ -3730,13 +3535,8 @@
                 "fr": "",
                 "es": ""
               },
-              "type": "object",
-              "propertyOrder": 2,
-              "patternProperties": {
-                ".{1,}": {
-                  "type": "string"
-                }
-              }
+              "type": "string",
+              "propertyOrder": 2
             },
             "dataValidationOutput": {
               "title": "Data validation - output",
@@ -3751,13 +3551,8 @@
                 "fr": "",
                 "es": ""
               },
-              "type": "object",
-              "propertyOrder": 3,
-              "patternProperties": {
-                ".{1,}": {
-                  "type": "string"
-                }
-              }
+              "type": "string",
+              "propertyOrder": 3
             },
             "dataValidationSource": {
               "title": "Data validation - source",
@@ -3772,13 +3567,8 @@
                 "fr": "",
                 "es": ""
               },
-              "type": "object",
-              "propertyOrder": 1,
-              "patternProperties": {
-                ".{1,}": {
-                  "type": "string"
-                }
-              }
+              "type": "string",
+              "propertyOrder": 1
             }
           }
         }

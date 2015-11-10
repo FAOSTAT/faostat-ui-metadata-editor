@@ -121,6 +121,7 @@ define(['jquery',
             editor_value[key] = value;
         }
         editor_value.title = editor_value.title_fenix;
+        //editor_value.meIdentification.creationDate = (new Date(editor_value.meIdentification.creationDate)).getTime();
         editor_value.creationDate = (new Date(editor_value.creationDate)).getTime();
         editor_value.meContent.seCoverage.coverageTime.from = (new Date(editor_value.meContent.seCoverage.coverageTime.from)).getTime();
         editor_value.meContent.seCoverage.coverageTime.to = (new Date(editor_value.meContent.seCoverage.coverageTime.to)).getTime();
@@ -129,9 +130,14 @@ define(['jquery',
         editor_value.meMaintenance.metadataLastUpdate = (new Date(editor_value.meMaintenance.metadataLastUpdate)).getTime();
         delete editor_value.meIdentification;
         delete editor_value.title_fenix;
-        this.edited_lite_data = editor_value;
-        console.debug(this.data);
-        console.debug(this.edited_lite_data);
+        this.CONFIG.edited_lite_data = editor_value;
+
+        console.debug('MAX');
+        console.debug(this.CONFIG.original_lite_data);
+        //console.debug(JSON.stringify(this.CONFIG.original_lite_data));
+        console.debug('EDITED TO THE REST');
+        console.debug(this.CONFIG.edited_lite_data);
+        //console.debug(JSON.stringify(this.CONFIG.edited_lite_data));
 
         /* Get original full data. */
         $.ajax({
@@ -154,27 +160,7 @@ define(['jquery',
                     that.CONFIG.original_full_data = $.parseJSON(response);
                 }
 
-                /* LITE to FULL. */
-                $.ajax({
-
-                    url: 'http://faostat3.fao.org/mdfaostat/getFullMD/',
-                    type: 'POST',
-                    dataType: 'json',
-                    contentType: 'application/json; charset=utf-8',
-                    data: {
-                        lang: 'en',
-                        //liteMD: JSON.stringify(that.edited_lite_data)
-                        liteMD: that.edited_lite_data
-                    },
-                    success: function (response) {
-                        console.debug(response);
-                    },
-                    error: function (a, b, c) {
-                        console.error(a);
-                        console.error(b);
-                        console.error(c);
-                    }
-                });
+                that.lite2full();
 
             },
 
@@ -188,6 +174,41 @@ define(['jquery',
 
         });
 
+
+    };
+
+    APPLICATION.prototype.lite2full = function () {
+
+        var data = {
+                lang: 'en',
+                liteMD: JSON.stringify(this.CONFIG.edited_lite_data)
+                //liteMD: that.CONFIG.edited_lite_data
+            };
+        console.debug(data);
+        console.debug();
+
+        /* LITE to FULL. */
+        $.ajax({
+
+            url: 'http://faostat3.fao.org/mdfaostat/getFullMD/default.aspx',
+            type: 'POST',
+            data: data,
+
+            success: function (response) {
+                var full = response;
+                if (typeof full === 'string') {
+                    full = $.parseJSON(full);
+                }
+                console.debug(full);
+            },
+
+            error: function (a, b, c) {
+                console.error(a);
+                console.error(b);
+                console.error(c);
+            }
+
+        });
 
     };
 
