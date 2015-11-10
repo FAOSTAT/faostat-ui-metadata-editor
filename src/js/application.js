@@ -132,13 +132,6 @@ define(['jquery',
         delete editor_value.title_fenix;
         this.CONFIG.edited_lite_data = editor_value;
 
-        console.debug('MAX');
-        console.debug(this.CONFIG.original_lite_data);
-        //console.debug(JSON.stringify(this.CONFIG.original_lite_data));
-        console.debug('EDITED TO THE REST');
-        console.debug(this.CONFIG.edited_lite_data);
-        //console.debug(JSON.stringify(this.CONFIG.edited_lite_data));
-
         /* Get original full data. */
         $.ajax({
 
@@ -182,10 +175,9 @@ define(['jquery',
         var data = {
                 lang: 'en',
                 liteMD: JSON.stringify(this.CONFIG.edited_lite_data)
-                //liteMD: that.CONFIG.edited_lite_data
-            };
-        console.debug(data);
-        console.debug();
+            },
+            that = this;
+        console.debug(this.CONFIG.edited_lite_data.language);
 
         /* LITE to FULL. */
         $.ajax({
@@ -195,17 +187,24 @@ define(['jquery',
             data: data,
 
             success: function (response) {
-                var full = response;
-                if (typeof full === 'string') {
-                    full = $.parseJSON(full);
+                that.CONFIG.edited_full_data = response;
+                if (typeof that.CONFIG.edited_full_data === 'string') {
+                    that.CONFIG.edited_full_data = $.parseJSON(that.CONFIG.edited_full_data);
                 }
-                console.debug(full);
+                console.debug('lang: LITE2FULL');
+                console.debug(that.CONFIG.edited_full_data.language);
+
+                that.CONFIG.edited_full_data = $.extend(true, {}, that.CONFIG.original_full_data, that.CONFIG.edited_full_data);
+                console.debug('lang: MERGE');
+                console.debug(that.CONFIG.edited_full_data.language);
             },
 
-            error: function (a, b, c) {
-                console.error(a);
-                console.error(b);
-                console.error(c);
+            error: function (a) {
+                swal({
+                    title: 'Error',
+                    type: 'error',
+                    text: a.responseText
+                });
             }
 
         });
