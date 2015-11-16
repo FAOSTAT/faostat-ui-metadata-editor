@@ -7,9 +7,10 @@ define(['jquery',
         'swal',
         'FAOSTAT_THEME',
         'text!json/schema.json',
+        'q',
         'jsonEditor'], function ($, Handlebars, templates,
                                     Tree, FAOSTATAPIClient, swal,
-                                    FAOSTAT_THEME, schema) {
+                                    FAOSTAT_THEME, schema, Q) {
 
     'use strict';
 
@@ -19,7 +20,6 @@ define(['jquery',
             lang: 'en',
             placeholder_id: 'placeholder',
             logged: true, /* TODO remove this! */
-            //url_metadata: 'http://faostat3.fao.org/d3s2/v2/msd/resources/metadata/uid',
             url_metadata: 'http://faostat3.fao.org/mdfaostat/get/',
             callback: {},
             original_full_data: null,
@@ -89,7 +89,7 @@ define(['jquery',
             callback: {
                 // Render Section
                 onTreeRendered: function (arg) {
-                    console.debug('rendered bitch! ' + arg);
+                    //console.debug('tree rendered! ' + arg);
                 },
                 onClick: function (callback) {
                     that.CONFIG.domain_id = callback.id;
@@ -112,29 +112,118 @@ define(['jquery',
             that = this,
             i,
             key,
-            value;
+            value,
+            merged,
+            edited_lite_metadata,
+            original_full_data,
+            edited_full_data,
+            fixed_keys;
 
-        /* Remove items from meIdentification. */
-        for (i = 0; i < Object.keys(editor_value.meIdentification).length; i += 1) {
-            key = Object.keys(editor_value.meIdentification)[i];
-            value = editor_value.meIdentification[key];
-            editor_value[key] = value;
+        /* Refactor the output of the editor. */
+        this.refactor_editor_output().then(function (response) {
+
+            edited_lite_metadata = response;
+            //console.debug('edited_lite_metadata');
+            //console.debug(edited_lite_metadata);
+            //console.debug('');
+
+            /* Get original full metadata. */
+            that.get_original_full_metadata().then(function (response) {
+
+                /* Store the original full metadata. */
+                original_full_data = response;
+
+                /* Convert the editor's output in full metadata. */
+                that.lite2full(edited_lite_metadata).then(function (response) {
+
+                    /* Store the full edited metadata. */
+                    edited_full_data = response;
+                    if (typeof edited_full_data === 'string') {
+                        edited_full_data = $.parseJSON(edited_full_data);
+                    }
+
+                    /* Fix keys. */
+                    fixed_keys = that.fix_keys_case(edited_full_data);
+
+                    /* Merge metadata. */
+                    merged = $.extend(true, original_full_data, fixed_keys);
+                    console.debug(merged);
+
+                    /* Update DB. */
+                    that.update_db(merged).then(function (response) {
+                        console.debug(response);
+                    });
+
+
+                });
+
+            });
+
+        });
+
+
+    };
+
+    APPLICATION.prototype.update_db = function (edited_full_data) {
+        var data = {
+            lang: this.CONFIG.lang,
+            domainCode: this.CONFIG.domain_id.toUpperCase(),
+            MD: JSON.stringify(edited_full_data)
+        };
+        return Q($.ajax({
+            url: 'http://faostat3.fao.org/mdfaostat/set/default.aspx',
+            type: 'POST',
+            data: data,
+            error: function (a, b, c) {
+                console.error(a);
+                console.error(b);
+                console.error(c);
+            }
+        }));
+    };
+
+    APPLICATION.prototype.fix_keys_case = function (json) {
+        var i, key, tmp;
+        for (i = 0; i < Object.keys(json).length; i += 1) {
+            key = Object.keys(json)[i];
+            if (json[key] !== undefined && json[key] !== null) {
+                if (typeof json[key] === 'object') {
+                    tmp = this.fix_keys_case(json[key]);
+                    json[key] = tmp;
+                } else {
+                    switch (key) {
+                    case 'en':
+                        json.EN = json.en;
+                        delete json.en;
+                        break;
+                    case 'fr':
+                        json.FR = json.fr;
+                        delete json.fr;
+                        break;
+                    case 'es':
+                        json.ES = json.es;
+                        delete json.es;
+                        break;
+                    }
+                }
+            }
         }
-        editor_value.title = editor_value.title_fenix;
-        //editor_value.meIdentification.creationDate = (new Date(editor_value.meIdentification.creationDate)).getTime();
-        editor_value.creationDate = (new Date(editor_value.creationDate)).getTime();
-        editor_value.meContent.seCoverage.coverageTime.from = (new Date(editor_value.meContent.seCoverage.coverageTime.from)).getTime();
-        editor_value.meContent.seCoverage.coverageTime.to = (new Date(editor_value.meContent.seCoverage.coverageTime.to)).getTime();
-        editor_value.meMaintenance.metadataLastCertified = (new Date(editor_value.meMaintenance.metadataLastCertified)).getTime();
-        editor_value.meMaintenance.metadataLastPosted = (new Date(editor_value.meMaintenance.metadataLastPosted)).getTime();
-        editor_value.meMaintenance.metadataLastUpdate = (new Date(editor_value.meMaintenance.metadataLastUpdate)).getTime();
-        delete editor_value.meIdentification;
-        delete editor_value.title_fenix;
-        this.CONFIG.edited_lite_data = editor_value;
+        return json;
+    };
 
-        /* Get original full data. */
-        $.ajax({
+    APPLICATION.prototype.lite2full = function (edited_lite_data) {
+        return Q($.ajax({
+            url: 'http://faostat3.fao.org/mdfaostat/getFullMD/default.aspx',
+            type: 'POST',
+            data: {
+                lang: this.CONFIG.lang,
+                liteMD: JSON.stringify(edited_lite_data)
+            }
+        }));
+    };
 
+    APPLICATION.prototype.get_original_full_metadata = function () {
+        return Q($.ajax({
             url: this.CONFIG.url_metadata,
             type: 'GET',
             dataType: 'json',
@@ -143,70 +232,35 @@ define(['jquery',
                 lang: this.CONFIG.lang,
                 domainCode: this.CONFIG.domain_id.toUpperCase(),
                 type: 'full'
-            },
-
-            success: function (response) {
-
-                /* Cast the result, if required. */
-                that.CONFIG.original_full_data = response;
-                if (typeof that.CONFIG.original_full_data === 'string') {
-                    that.CONFIG.original_full_data = $.parseJSON(response);
-                }
-
-                that.lite2full();
-
-            },
-
-            error: function (a) {
-                swal({
-                    title: 'Error',
-                    type: 'error',
-                    text: a.responseText
-                });
             }
-
-        });
-
-
+        }));
     };
 
-    APPLICATION.prototype.lite2full = function () {
+    APPLICATION.prototype.refactor_editor_output = function () {
 
-        var data = {
-                lang: 'en',
-                liteMD: JSON.stringify(this.CONFIG.edited_lite_data)
-            },
+        /* Variables. */
+        var editor_value = this.CONFIG.editor.getValue(),
+            i,
+            key,
+            value,
             that = this;
-        console.debug(this.CONFIG.edited_lite_data.language);
 
-        /* LITE to FULL. */
-        $.ajax({
-
-            url: 'http://faostat3.fao.org/mdfaostat/getFullMD/default.aspx',
-            type: 'POST',
-            data: data,
-
-            success: function (response) {
-                that.CONFIG.edited_full_data = response;
-                if (typeof that.CONFIG.edited_full_data === 'string') {
-                    that.CONFIG.edited_full_data = $.parseJSON(that.CONFIG.edited_full_data);
-                }
-                console.debug('lang: LITE2FULL');
-                console.debug(that.CONFIG.edited_full_data.language);
-
-                that.CONFIG.edited_full_data = $.extend(true, {}, that.CONFIG.original_full_data, that.CONFIG.edited_full_data);
-                console.debug('lang: MERGE');
-                console.debug(that.CONFIG.edited_full_data.language);
-            },
-
-            error: function (a) {
-                swal({
-                    title: 'Error',
-                    type: 'error',
-                    text: a.responseText
-                });
+        return Q.fcall(function () {
+            for (i = 0; i < Object.keys(editor_value.meIdentification).length; i += 1) {
+                key = Object.keys(editor_value.meIdentification)[i];
+                value = editor_value.meIdentification[key];
+                editor_value[key] = value;
             }
-
+            editor_value.title = editor_value.title_fenix;
+            editor_value.creationDate = (new Date(editor_value.creationDate)).getTime();
+            editor_value.meContent.seCoverage.coverageTime.from = (new Date(editor_value.meContent.seCoverage.coverageTime.from)).getTime();
+            editor_value.meContent.seCoverage.coverageTime.to = (new Date(editor_value.meContent.seCoverage.coverageTime.to)).getTime();
+            editor_value.meMaintenance.metadataLastCertified = (new Date(editor_value.meMaintenance.metadataLastCertified)).getTime();
+            editor_value.meMaintenance.metadataLastPosted = (new Date(editor_value.meMaintenance.metadataLastPosted)).getTime();
+            editor_value.meMaintenance.metadataLastUpdate = (new Date(editor_value.meMaintenance.metadataLastUpdate)).getTime();
+            delete editor_value.meIdentification;
+            delete editor_value.title_fenix;
+            return editor_value;
         });
 
     };
