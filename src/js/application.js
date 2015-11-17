@@ -100,7 +100,29 @@ define(['jquery',
 
         /* Save Changes button. */
         $('#save_button').click(function () {
-            that.save();
+            if (that.CONFIG.domain_id !== null) {
+                swal({
+                    title: 'Are you sure?',
+                    text: 'You are going to save your changes into the FAOSTAT database. The results will be visible on the production website.',
+                    type: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#286090',
+                    confirmButtonText: 'Yes, save it',
+                    cancelButtonText: 'No',
+                    closeOnConfirm: true,
+                    closeOnCancel: true
+                }, function (isConfirm) {
+                    if (isConfirm) {
+                        that.save();
+                    }
+                });
+            } else {
+                swal({
+                    title: 'Error',
+                    text: 'Please select a domain using the tree on the lefthand side of the screen.',
+                    type: 'error'
+                });
+            }
         });
 
     };
@@ -122,10 +144,8 @@ define(['jquery',
         /* Refactor the output of the editor. */
         this.refactor_editor_output().then(function (response) {
 
+            /* Metadata taken from the editor. */
             edited_lite_metadata = response;
-            //console.debug('edited_lite_metadata');
-            //console.debug(edited_lite_metadata);
-            //console.debug('');
 
             /* Get original full metadata. */
             that.get_original_full_metadata().then(function (response) {
@@ -147,11 +167,21 @@ define(['jquery',
 
                     /* Merge metadata. */
                     merged = $.extend(true, original_full_data, fixed_keys);
-                    console.debug(merged);
 
                     /* Update DB. */
                     that.update_db(merged).then(function (response) {
-                        console.debug(response);
+                        swal({
+                            title: 'Info',
+                            text: 'Your changes have been stored into the FAOSTAT database.',
+                            type: 'info',
+                            confirmButtonColor: '#286090',
+                            confirmButtonText: 'Thank You',
+                            closeOnConfirm: true
+                        }, function (isConfirm) {
+                            if (isConfirm) {
+                                that.load_mdsd(that.CONFIG.domain_id);
+                            }
+                        });
                     });
 
 
@@ -173,12 +203,7 @@ define(['jquery',
         return Q($.ajax({
             url: 'http://faostat3.fao.org/mdfaostat/set/default.aspx',
             type: 'POST',
-            data: data,
-            error: function (a, b, c) {
-                console.error(a);
-                console.error(b);
-                console.error(c);
-            }
+            data: data
         }));
     };
 
@@ -344,18 +369,7 @@ define(['jquery',
         var section_regex,
             properties,
             key,
-            i,
             container = $('#editor_placeholder');
-
-        /* Apply application settings. */
-        //this.CONFIG.data = this.apply_settings(this.CONFIG.data);
-
-        /* Simplify OjCodeLists data. */
-        //for (i = 0; i < Object.keys(this.CONFIG.data).length; i += 1) {
-        //    if (typeof this.CONFIG.data[Object.keys(this.CONFIG.data)[i]] === 'object') {
-        //        this.remove_OjCodeListsData(this.CONFIG.data[Object.keys(this.CONFIG.data)[i]], Object.keys(this.CONFIG.data)[i], this.CONFIG.data);
-        //    }
-        //}
 
         /* Display the editor... */
         if (this.CONFIG.original_lite_data !== undefined) {
