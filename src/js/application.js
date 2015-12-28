@@ -19,7 +19,7 @@ define(['jquery',
         this.CONFIG = {
             lang: 'en',
             placeholder_id: 'placeholder',
-            logged: true, /* TODO remove this! */
+            logged: false, /* TODO remove this! */
             url_metadata: 'http://faostat3.fao.org/mdfaostat/get/',
             callback: {},
             original_full_data: null,
@@ -166,7 +166,7 @@ define(['jquery',
                     fixed_keys = that.fix_keys_case(edited_full_data);
 
                     /* Merge metadata. */
-                    merged = $.extend(true, original_full_data, fixed_keys);
+                    merged = $.extend(true, {}, original_full_data, fixed_keys);
 
                     /* Update DB. */
                     that.update_db(merged).then(function (response) {
