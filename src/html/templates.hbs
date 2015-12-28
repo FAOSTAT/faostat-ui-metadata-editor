@@ -1,0 +1,109 @@
+<script type='text/x-handlebars-template' id='main_structure'>
+
+    <!-- Main container. -->
+    <div class='container-fluid'>
+
+        <!-- Header. -->
+        <div data-role='header'>
+            <div class='row'>
+                <div class='col-lg-12 header'>
+                    <div class='faostat-logo-text'>
+                        <b>FAO</b>STAT <b>Metadata Editor</b>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Content. -->
+        <div data-role='content'>
+            <div id='content_placeholder'></div>
+        </div>
+
+        <!-- Footer. -->
+        <div data-role='footer'>
+            <div class='row'>
+                <div class='col-lg-12 header'>
+                    <div class='faostat-logo-text'>
+                        © FAO 2015
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+</script>
+
+<script type='text/x-handlebars-template' id='login_structure'>
+    <br>
+    <div class='row'>
+        <div class='col-lg-4'>
+            &nbsp;
+        </div>
+        <div class='col-lg-4'>
+            <div class='panel panel-primary'>
+                <div class='panel panel-heading'>
+                    Login Form
+                </div>
+                <div class='panel panel-body'>
+                    <div class='form-group'>
+                        <label for='username'>
+                            FAO Email
+                        </label>
+                        <input id='username' type='email' class='form-control' placeholder='e.g. john.doe@fao.org'>
+                    </div>
+                    <div class='form-group'>
+                        <label for='password'>
+                            Password
+                        </label>
+                        <input id='password' type='password' class='form-control'>
+                    </div>
+                    <button id='login_button' class='btn btn-primary' style='width: 100%;'>
+                        Login
+                    </button>
+                </div>
+                <div class='panel panel-footer text-right'>
+                    <div class='panel-footer-text'>
+                        Please contact <a>Ms. Amanda Gordon</a> to request an account.
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class='col-lg-4'>
+            &nbsp;
+        </div>
+    </div>
+    </br>
+</script>
+
+<script type='text/x-handlebars-template' id='metadata_editor_structure'>
+    <div class='row'>
+        <div class='col-lg-3'>
+            <br>
+            FAOSTAT Domains
+            <hr>
+            <div id='tree_placeholder'></div>
+            <br>
+        </div>
+        <div class='col-lg-9'>
+            <br>
+            Metadata Editor
+            <button class='btn btn-primary pull-right' id='save_button'>
+                <span class='glyphicon glyphicon-floppy-save'></span> Save Changes
+            </button>
+            <hr style='margin-bottom: 0;'>
+            <div class='row'>
+                <div class='col-lg-12'>
+                    <div id='editor_placeholder'>
+                        <div class='text-center'>
+                            <h1>
+                                Please select a domain using the tree on the lefthand side of the screen.
+                            </h1>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <br>
+        </div>
+    </div>
+</script>

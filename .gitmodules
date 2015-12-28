@@ -1,0 +1,12 @@
+[submodule "submodules/faostat-ui-tree"]
+	path = submodules/faostat-ui-tree
+	url = https://github.com/FAOSTAT/faostat-ui-tree.git
+[submodule "submodules/faostat-ui-commons"]
+	path = submodules/faostat-ui-commons
+	url = https://github.com/FAOSTAT/faostat-ui-commons.git
+[submodule "submodules/fenix-ui-common"]
+	path = submodules/fenix-ui-common
+	url = https://github.com/FENIX-Platform/fenix-ui-common.git
+[submodule "submodules/json-editor-faostat-theme"]
+	path = submodules/json-editor-faostat-theme
+	url = https://github.com/FAOSTAT/json-editor-faostat-theme.git
