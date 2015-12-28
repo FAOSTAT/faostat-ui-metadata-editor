@@ -115,7 +115,7 @@ define(['jquery',
 
     };
 
-    APPLICATION.prototype.load_metadata = function (id) {
+    APPLICATION.prototype.load_metadata = function (domain_id) {
 
         /* Variables. */
         var that = this,
@@ -134,7 +134,7 @@ define(['jquery',
             schema = that.create_json_schema(response);
 
             /* Fetch data. */
-            that.get_metadata().then(function (response) {
+            that.get_metadata(domain_id).then(function (response) {
 
                 /* Cast response, if required. */
                 if (typeof response === 'string') {
@@ -142,7 +142,9 @@ define(['jquery',
                 }
 
                 /* Create data. */
-                data = that.create_data(response);
+                if (response !== null && response !== undefined) {
+                    data = that.create_data(response);
+                }
 
                 /* Create JSON editor. */
                 that.create_json_editor(schema, data);
@@ -244,12 +246,12 @@ define(['jquery',
         }));
     };
 
-    APPLICATION.prototype.get_metadata = function () {
+    APPLICATION.prototype.get_metadata = function (domain_id) {
         return Q($.ajax({
             url: this.CONFIG.url_get_domain,
             type: 'GET',
             data: {
-                domaincode: this.CONFIG.domain
+                domaincode: domain_id
             }
         }));
     };
