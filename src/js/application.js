@@ -26,6 +26,7 @@ define(['jquery',
             domain_id: null,
             url_get_metadata: 'http://faostat3.fao.org/mdfaostat/getmd/',
             url_get_domain: 'http://faostat3.fao.org/mdfaostat/getdomain/',
+            url_save_metadata: 'http://faostat3.fao.org/mdfaostat/setdomain/default.aspx',
             editor_placeholder: 'editor_placeholder'
         };
 
@@ -115,12 +116,15 @@ define(['jquery',
 
     };
 
-    APPLICATION.prototype.load_metadata = function (domain_id) {
+    APPLICATION.prototype.load_metadata = function (domain_code) {
 
         /* Variables. */
         var that = this,
             schema,
             data;
+
+        /* Store domain code. */
+        this.CONFIG.domain_code = domain_code;
 
         /* Get metadata structure. */
         this.get_metadata_structure().then(function (response) {
@@ -134,7 +138,7 @@ define(['jquery',
             schema = that.create_json_schema(response);
 
             /* Fetch data. */
-            that.get_metadata(domain_id).then(function (response) {
+            that.get_metadata(domain_code).then(function (response) {
 
                 /* Cast response, if required. */
                 if (typeof response === 'string') {
@@ -158,14 +162,13 @@ define(['jquery',
     APPLICATION.prototype.create_json_editor = function (schema, data) {
 
         /* Variables. */
-        var div = $('#' + this.CONFIG.editor_placeholder),
-            editor;
+        var div = $('#' + this.CONFIG.editor_placeholder);
 
         /* Clear editor area. */
         div.empty();
 
         /* Init editor. */
-        editor = new JSONEditor(document.getElementById(this.CONFIG.editor_placeholder), {
+        this.CONFIG.editor = new JSONEditor(document.getElementById(this.CONFIG.editor_placeholder), {
             schema: schema,
             theme: 'bootstrap3',
             iconlib: 'fontawesome4',
@@ -179,7 +182,7 @@ define(['jquery',
             remove_empty_properties: false,
             expand_height: true
         });
-        editor.setValue(data);
+        this.CONFIG.editor.setValue(data);
 
         /* Remove unwanted labels. */
         div.find('div:first').find('h3:first').empty();
@@ -246,18 +249,55 @@ define(['jquery',
         }));
     };
 
-    APPLICATION.prototype.get_metadata = function (domain_id) {
+    APPLICATION.prototype.get_metadata = function (domain_code) {
         return Q($.ajax({
             url: this.CONFIG.url_get_domain,
             type: 'GET',
             data: {
-                domaincode: domain_id
+                domaincode: domain_code
             }
         }));
     };
 
     APPLICATION.prototype.save = function () {
+        var editor_content = this.create_save_payload();
+        $.ajax({
+            url: this.CONFIG.url_save_metadata,
+            type: 'POST',
+            data: {
+                MD: JSON.stringify(editor_content)
+            },
+            success: function () {
+                swal('Info', 'Metadata has been succesfully updated.', 'info');
+            },
+            error: function (e) {
+                swal('Error', e.responseText, 'error');
+            }
+        });
+    };
 
+    APPLICATION.prototype.create_save_payload = function () {
+        var editor_content = this.CONFIG.editor.getValue(),
+            i,
+            j,
+            section,
+            item,
+            out = [];
+        for (i = 0; i < Object.keys(editor_content).length; i += 1) {
+            section = editor_content[Object.keys(editor_content)[i]];
+            for (j = 0; j < Object.keys(section).length; j += 1) {
+                item = section[Object.keys(section)[j]];
+                if (item !== undefined && item.length > 0) {
+                    out.push({
+                        MetadataCode: Object.keys(section)[j],
+                        DomainCode: this.CONFIG.domain_code,
+                        MetadataText: item,
+                        lang: 'e'
+                    });
+                }
+            }
+        }
+        return out;
     };
 
     APPLICATION.prototype.load_login_structure = function () {
