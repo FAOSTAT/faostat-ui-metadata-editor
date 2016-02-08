@@ -15,7 +15,7 @@ require([
         faostatCommonsConfig = FAOSTATCommons;
 
     commonConfig.baseUrl = submodules_path + 'fenix-ui-common/js';
-    treeConfig.baseUrl = submodules_path + '/faostat-ui-tree/src/js';
+    treeConfig.baseUrl = submodules_path + 'faostat-ui-tree/src/js';
     faostatCommonsConfig.baseUrl = submodules_path + '/faostat-ui-commons/js';
     faostatThemeConfig.baseUrl = submodules_path + '/json-editor-faostat-theme/src/js';
 
@@ -41,7 +41,8 @@ require([
                     swal: 'libs/sweet-alert',
                     jsonEditor: '{FENIX_CDN}/js/json-editor/0.7.22/jsoneditor.min',
                     html: '../html',
-                    json: '../json'
+                    json: '../json',
+                    loglevel: '{FENIX_CDN}/js/loglevel/1.4.0/loglevel'
                 },
 
                 shim: {

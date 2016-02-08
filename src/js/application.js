@@ -71,10 +71,14 @@ define(['jquery',
             that = this;
         $('#content_placeholder').html(html);
 
+        console.log('tree', Tree)
+
         /* Load FAOSTAT tree. */
         this.tree = new Tree();
         this.tree.init({
-            placeholder_id: 'tree_placeholder',
+            placeholder_id: '#tree_placeholder',
+            datasoure: 'production',
+            lang: 'en',
             callback: {
                 // Render Section
                 onTreeRendered: function (arg) {
@@ -86,6 +90,7 @@ define(['jquery',
                 }
             }
         });
+
 
         /* Save Changes button. */
         $('#save_button').click(function () {
@@ -222,7 +227,7 @@ define(['jquery',
             if (schema.properties[section] === undefined) {
                 schema.properties[section] = {
                     type: 'object',
-                    title: 'Section ' + section,
+                    title: metadata_structure[i].NameMacroGroup,
                     propertyOrder: section,
                     required: true,
                     properties: {}
