@@ -26,7 +26,7 @@ define(['jquery',
                     domain_id: null,
                     url_get_metadata: 'http://faostat3.fao.org/mdfaostat/getmd/',
                     url_get_domain: 'http://faostat3.fao.org/mdfaostat/getdomain/',
-                    url_save_metadata: 'http://faostat3.fao.org/mdfaostat/setdomain/default.aspx',
+                    url_save_metadata: 'http://faostat3.fao.org/mdfaostat/setdomain/Default.aspx', 
                     editor_placeholder: 'editor_placeholder'
                 };
 
@@ -98,7 +98,7 @@ define(['jquery',
                         onTreeRendered: function (arg) {
                             //console.debug('tree rendered! ' + arg);
                         },
-                        onClick: function (callback) {
+                        onClick: function (callback) { 
                             that.CONFIG.domain_id = callback.id;
                             that.load_metadata(callback.id);
                         }
@@ -136,7 +136,7 @@ define(['jquery',
             };
 
             APPLICATION.prototype.load_metadata = function (domain_code) {
-
+               
                 /* Variables. */
                 var that = this,
             schema,
@@ -152,13 +152,13 @@ define(['jquery',
                     if (typeof response === 'string') {
                         response = $.parseJSON(response);
                     }
-
+                    console.log('schema111', response);
                     /* Create JSON schema. */
                     schema = that.create_json_schema(response);
-
+                    console.log('schema' + schema);
                     /* Fetch data. */
                     that.get_metadata(domain_code).then(function (response) {
-
+                       
                         /* Cast response, if required. */
                         if (typeof response === 'string') {
                             response = $.parseJSON(response);
@@ -174,6 +174,8 @@ define(['jquery',
 
                     });
 
+                }).fail(function(e) {
+                    console.error('Error on request', e);
                 });
 
             };
@@ -263,6 +265,8 @@ define(['jquery',
             };
 
             APPLICATION.prototype.get_metadata_structure = function () {
+                console.log(this.CONFIG.url_get_metadata)
+                console.log(this.CONFIG.lang)
                 return Q($.ajax({
                     url: this.CONFIG.url_get_metadata,
                     type: 'GET',
@@ -273,7 +277,8 @@ define(['jquery',
             };
 
             APPLICATION.prototype.get_metadata = function (domain_code) {
-                return Q($.ajax({
+                console.log('url_get_domain ' + this.CONFIG.url_get_domain);
+                return Q($.ajax({               
                     url: this.CONFIG.url_get_domain,
                     type: 'GET',
                     data: {
@@ -316,7 +321,7 @@ define(['jquery',
                                 MetadataCode: Object.keys(section)[j],
                                 DomainCode: this.CONFIG.domain_code,
                                 MetadataText: item,
-                                lang: 'e'
+                                lang: this.CONFIG.lang
                             });
                         }
                     }
