@@ -38,7 +38,7 @@ require([
                     text: '{FENIX_CDN}/js/requirejs/plugins/text/2.0.12/text',
                     faostatapiclient: '../js/FAOSTATAPIClient',
                     application: submodules_path + '../src/js/application',
-                    swal: 'libs/sweet-alert',
+                    swal: '{FENIX_CDN}/js/sweet-alert/0.5.0/sweet-alert.min',
                     jsonEditor: '{FENIX_CDN}/js/json-editor/0.7.22/jsoneditor.min',
                     html: '../html',
                     json: '../json',

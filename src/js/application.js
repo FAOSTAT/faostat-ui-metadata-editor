@@ -26,7 +26,8 @@ define(['jquery',
                     domain_id: null,
                     url_get_metadata: 'http://faostat3.fao.org/mdfaostat/getmd/',
                     url_get_domain: 'http://faostat3.fao.org/mdfaostat/getdomain/',
-                    url_save_metadata: 'http://faostat3.fao.org/mdfaostat/setdomain/Default.aspx', 
+                    url_save_metadata: 'http://faostat3.fao.org/mdfaostat/setdomain/Default.aspx',
+
                     editor_placeholder: 'editor_placeholder'
                 };
 
@@ -60,7 +61,7 @@ define(['jquery',
                 }
 
                 var that = this;
-                $('#lang').on('change', function () {                  
+                $('#lang').on('change', function () {
                     that.CONFIG.lang = $('#lang option:selected').val();
                     that.load_structure();
                 });
@@ -98,7 +99,7 @@ define(['jquery',
                         onTreeRendered: function (arg) {
                             //console.debug('tree rendered! ' + arg);
                         },
-                        onClick: function (callback) { 
+                        onClick: function (callback) {
                             that.CONFIG.domain_id = callback.id;
                             that.load_metadata(callback.id);
                         }
@@ -108,22 +109,27 @@ define(['jquery',
 
                 /* Save Changes button. */
                 $('#save_button').click(function () {
+                    console.log("Saving Domain: ", that.CONFIG.domain_id);
                     if (that.CONFIG.domain_id !== null) {
+
                         swal({
-                            title: 'Are you sure?',
+                            title: "Are you sure?",
                             text: 'You are going to save your changes into the FAOSTAT database. The results will be visible on the production website.',
-                            type: 'warning',
+                            type: "warning", 
                             showCancelButton: true,
-                            confirmButtonColor: '#286090',
+                            confirmButtonColor: "#DD6B55",
                             confirmButtonText: 'Yes, save it',
-                            cancelButtonText: 'No',
-                            closeOnConfirm: true,
-                            closeOnCancel: true
+                            closeOnConfirm: false
                         }, function (isConfirm) {
+
+                            console.log(isConfirm);
                             if (isConfirm) {
                                 that.save();
-                            }
+                            }      
+                                                 
                         });
+
+                        
                     } else {
                         swal({
                             title: 'Error',
@@ -136,7 +142,7 @@ define(['jquery',
             };
 
             APPLICATION.prototype.load_metadata = function (domain_code) {
-               
+
                 /* Variables. */
                 var that = this,
             schema,
@@ -158,7 +164,7 @@ define(['jquery',
                     console.log('schema' + schema);
                     /* Fetch data. */
                     that.get_metadata(domain_code).then(function (response) {
-                       
+
                         /* Cast response, if required. */
                         if (typeof response === 'string') {
                             response = $.parseJSON(response);
@@ -174,7 +180,7 @@ define(['jquery',
 
                     });
 
-                }).fail(function(e) {
+                }).fail(function (e) {
                     console.error('Error on request', e);
                 });
 
@@ -270,7 +276,7 @@ define(['jquery',
                 return Q($.ajax({
                     url: this.CONFIG.url_get_metadata,
                     type: 'GET',
-                     data: {                       
+                    data: {
                         lang: this.CONFIG.lang
                     }
                 }));
@@ -278,7 +284,7 @@ define(['jquery',
 
             APPLICATION.prototype.get_metadata = function (domain_code) {
                 console.log('url_get_domain ' + this.CONFIG.url_get_domain);
-                return Q($.ajax({               
+                return Q($.ajax({
                     url: this.CONFIG.url_get_domain,
                     type: 'GET',
                     data: {
@@ -296,8 +302,8 @@ define(['jquery',
                     data: {
                         MD: JSON.stringify(editor_content)
                     },
-                    success: function () {
-                        swal('Info', 'Metadata has been succesfully updated.', 'info');
+                    success: function (r) {
+                        swal("Info", 'Metadata has been succesfully updated.', "success");
                     },
                     error: function (e) {
                         swal('Error', e.responseText, 'error');
